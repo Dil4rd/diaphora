@@ -35,7 +35,6 @@ from idaapi import *
 from idautils import *
 # pylint: enable=unused-wildcard-import
 # pylint: enable=wildcard-import
-
 import ida_pro
 import idaapi
 
@@ -71,10 +70,14 @@ except ImportError:
   HAS_GET_SOURCE_STRINGS = False
 
 # pylint: disable-next=wrong-import-order
-if ida_pro.IDA_SDK_VERSION >= 920:
-  from PySide6 import QtWidgets
-else:
-  from PyQt5 import QtWidgets
+# Guard Qt imports for headless idalib mode (no GUI available)
+try:
+  if ida_pro.IDA_SDK_VERSION >= 920:
+    from PySide6 import QtWidgets
+  else:
+    from PyQt5 import QtWidgets
+except ImportError:
+  QtWidgets = None
 
 #-------------------------------------------------------------------------------
 # Chooser items indices. They do differ from the CChooser.item items that are
